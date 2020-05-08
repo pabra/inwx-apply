@@ -1,7 +1,7 @@
 {
   "name": "inwx-apply",
   "version": "0.1.0",
-  "description": "",
+  "description": "Ensure DNS resource record entries from a JSON (exporting) file are applied through INWX API.",
   "bin": "dist/cjs/cli.js",
   "main": "dist/cjs/index.js",
   "module": "dist/cjs/index.js",
@@ -23,11 +23,26 @@
     "postbuild": "chmod +x dist/cjs/cli.js",
     "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,html,css,scss,yml,yaml}\"",
-    "format:check": "prettier --check \"src/**/*.{js,ts,jsx,tsx,json,html,css,scss,yml,yaml}\""
+    "format:check": "prettier --check \"src/**/*.{js,ts,jsx,tsx,json,html,css,scss,yml,yaml}\"",
+    "prepublishOnly": "run-s format:check lint test build"
   },
-  "keywords": [],
+  "keywords": [
+    "inwx",
+    "inwx-nodejs",
+    "typescript",
+    "dns",
+    "cli"
+  ],
   "author": "Patrick Braune <pabra@netzfruech.de>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pabra/inwx-apply.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pabra/inwx-apply/issues"
+  },
+  "homepage": "https://github.com/pabra/inwx-apply#readme",
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",

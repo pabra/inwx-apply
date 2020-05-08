@@ -45,7 +45,7 @@ const assertApiResponse = async (
     if (onErrorLogout) {
       await logout(apiClient); // eslint-disable-line @typescript-eslint/no-use-before-define
     }
-    logger.error('bad reesponse:', { response, apiMethod, methodParams });
+    logger.error('bad response:', { response, apiMethod, methodParams });
     throw new Error(
       `Api error. Code: ${response.code}  Message: ${
         response.msg
