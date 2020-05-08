@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+        node: [10, 12]
       fail-fast: false
 
     runs-on: ${{ matrix.runs-on }}
@@ -24,10 +25,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Node.js 12.x
+      - name: Set Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: ${{ matrix.node }}
 
       - name: npm install
         run: npm install
