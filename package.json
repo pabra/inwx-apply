@@ -60,7 +60,6 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^25.4.0",
     "ts-node": "^8.10.1",
-    "tslib": "^1.11.1",
     "typescript": "^3.8.3"
   },
   "dependencies": {
