@@ -215,13 +215,13 @@ const groupByType = (records: InwxRecord[]): InwxRecordsByType =>
 
 const printDiffHeader = (): void =>
   void process.stdout.write(
-    `Act ${'Name'.padEnd(30)} ${'Type'.padEnd(6)} ${'TTL'.padStart(
+    `Act ${'Name'.padStart(30)} ${'Type'.padEnd(6)} ${'TTL'.padStart(
       5,
     )} ${'Prio'.padStart(4)} ${'Content'}\n`,
   );
 
 const serializeEntry = (entry: Entry): string =>
-  `${entry.name.padEnd(30)} ${entry.type.padEnd(6)} ${String(
+  `${entry.name.padStart(30)} ${entry.type.padEnd(6)} ${String(
     entry.ttl,
   ).padStart(5)} ${String(entry.prio).padStart(4)} ${entry.content}`;
 
