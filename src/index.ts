@@ -1,5 +1,6 @@
 import c from 'ansi-colors';
 import { ApiClient, Language } from 'domrobot-client';
+import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
 import { config as rtConfig } from './types';
 import type {
   Config,
@@ -184,10 +185,20 @@ const centeredHeadline = (msg: string, length = 60, fillChar = '_'): void => {
 const getDomainEntries = async (
   apiClient: ApiClient,
   domain: string,
+  ignoreSanity = false,
 ): Promise<InwxRecord[]> => {
-  const response = await callApi(apiClient, 'nameserver.info', { domain });
+  try {
+    const response = await callApi(apiClient, 'nameserver.info', { domain });
 
-  return response.record;
+    return response.record;
+  } catch (err) {
+    const reApiErr = /Code: (?:2303|2002)/;
+    if (ignoreSanity && reApiErr.test(err.message)) {
+      return [];
+    } else {
+      throw err;
+    }
+  }
 };
 
 const groupByType = (records: InwxRecord[]): InwxRecordsByType =>
@@ -281,6 +292,7 @@ const handleRecords = async (
   resourceRecords: ResourceRecordPerDomain,
   ignoredDomains: string[],
   doWrite = false,
+  ignoreSanity = false,
 ): Promise<void> => {
   for (const registeredDomain of registeredDomains) {
     if (ignoredDomains.includes(registeredDomain.domain)) {
@@ -293,7 +305,7 @@ const handleRecords = async (
       registeredDomain.domain,
     );
     const currentEntries = groupByType(
-      await getDomainEntries(apiClient, registeredDomain.domain),
+      await getDomainEntries(apiClient, registeredDomain.domain, ignoreSanity),
     );
     const rrTypes = ([
       ...Object.keys(wantedEntries),
@@ -340,8 +352,16 @@ const handleRecords = async (
   }
 };
 
-const main = async (configPath: string, doWrite = false): Promise<void> => {
+const main = async (
+  configPath: string,
+  doWrite = false,
+  ignoreSanity = false,
+): Promise<void> => {
   const config = getConfig(configPath);
+  logger.debug('config', {
+    ...config,
+    credentials: { username: '***', password: '***', sharedSecret: '***' },
+  });
   logNotSubset(
     config.ignoredDomains,
     config.knownDomains,
@@ -358,6 +378,17 @@ const main = async (configPath: string, doWrite = false): Promise<void> => {
   await login(apiClient, config.credentials);
 
   const registeredDomains = await getRegisteredDomains(apiClient);
+  if (ignoreSanity) {
+    config.knownDomains.forEach(kd => {
+      if (registeredDomains.find(rd => rd.domain === kd) === undefined) {
+        registeredDomains.push({
+          domain: kd,
+          status: 'OK',
+          idna: toASCII(kd),
+        });
+      }
+    });
+  }
   checkRegisteredDomains(registeredDomains, config.knownDomains);
   const nameserverDomains = await getNameServerDomains(apiClient);
   checkNameserverDomains(nameserverDomains, config.knownDomains);
@@ -367,6 +398,7 @@ const main = async (configPath: string, doWrite = false): Promise<void> => {
     config.resourceRecords,
     config.ignoredDomains,
     doWrite,
+    ignoreSanity,
   );
 
   await logout(apiClient);

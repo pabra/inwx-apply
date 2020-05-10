@@ -15,6 +15,7 @@ const args = arg({
   '--debug': Boolean,
   '--file': String,
   '--write': Boolean,
+  '--insane': Boolean,
 
   // Aliases
   '-h': '--help',
@@ -22,6 +23,7 @@ const args = arg({
   '-d': '--debug',
   '-f': '--file',
   '-w': '--write',
+  '-i': '--insane',
 });
 
 if (args['--debug']) {
@@ -40,6 +42,7 @@ const showHelp = (): void => {
       -d, --debug       log debug output
       -f, --file        path to DNS entries exporting file
       -w, --write       actually "write" entries through INWX API
+      -i, --insane      ignore sanity checks
     \n`,
   );
 };
@@ -73,13 +76,15 @@ if (args['--help']) {
 } else {
   const doWrite = Boolean(args['--write']);
   const entriesFile = resolve(args['--file'] || defaultEntriesFile);
+  const ignoreSanity = Boolean(args['--insane']);
 
   logger.debug('doWrite:', doWrite);
   logger.debug('entriesFile:', entriesFile);
+  logger.debug('ignoreSanity:', ignoreSanity);
 
   if (!existsSync(entriesFile)) {
     logger.warn(`no file: ${entriesFile}`);
   } else {
-    main(entriesFile, doWrite);
+    main(entriesFile, doWrite, ignoreSanity);
   }
 }
