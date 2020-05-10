@@ -3,6 +3,7 @@ import { ApiClient, Language } from 'domrobot-client';
 import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
 import { config as rtConfig } from './types';
 import type {
+  AddEntry,
   Config,
   Credentials,
   Entry,
@@ -242,13 +243,14 @@ const removeEntries = async (
 
 const addEntries = async (
   apiClient: ApiClient,
-  entries: Entry[],
+  entries: AddEntry[],
   doWrite = false,
 ): Promise<void> => {
   for (const entry of entries) {
     if (doWrite) {
       await callApi(apiClient, 'nameserver.createRecord', {
         ttl: entry.ttl,
+        domain: entry.domain,
         type: entry.type,
         name: entry.name,
         content: entry.content,
@@ -332,6 +334,7 @@ const handleRecords = async (
           : undefined;
 
         return {
+          domain: registeredDomain.idna,
           name: replaceDomainPlaceholder(o.name, registeredDomain.idna),
           content: replaceDomainPlaceholder(o.content, registeredDomain.idna),
           type: rrType,
@@ -358,7 +361,7 @@ const main = async (
   ignoreSanity = false,
 ): Promise<void> => {
   const config = getConfig(configPath);
-  logger.debug('config', {
+  logger.debug('config:', {
     ...config,
     credentials: { username: '***', password: '***', sharedSecret: '***' },
   });
@@ -378,6 +381,7 @@ const main = async (
   await login(apiClient, config.credentials);
 
   const registeredDomains = await getRegisteredDomains(apiClient);
+  logger.debug('registeredDomains:', registeredDomains);
   if (ignoreSanity) {
     config.knownDomains.forEach(kd => {
       if (registeredDomains.find(rd => rd.domain === kd) === undefined) {
@@ -391,6 +395,7 @@ const main = async (
   }
   checkRegisteredDomains(registeredDomains, config.knownDomains);
   const nameserverDomains = await getNameServerDomains(apiClient);
+  logger.debug('nameserverDomains:', nameserverDomains);
   checkNameserverDomains(nameserverDomains, config.knownDomains);
   await handleRecords(
     apiClient,

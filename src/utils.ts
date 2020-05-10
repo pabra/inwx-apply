@@ -1,6 +1,7 @@
 import c from 'ansi-colors';
 import { inspect } from 'util';
 import type {
+  AddEntry,
   Entry,
   InwxRecord,
   ResourceRecordByType,
@@ -132,12 +133,12 @@ const getWantedEntries = (
 };
 
 const getEntriesDiff = (
-  wanted: Entry[],
+  wanted: AddEntry[],
   existing: InwxRecord[],
-): { toAdd: Entry[]; toRemove: InwxRecord[]; toUpdate: UpdateEntry[] } => {
+): { toAdd: AddEntry[]; toRemove: InwxRecord[]; toUpdate: UpdateEntry[] } => {
   const { uniqueAdd, uniqueRemove } = wanted
     .sort(entrySorter)
-    .reduce<{ uniqueAdd: Entry[]; uniqueRemove: InwxRecord[] }>(
+    .reduce<{ uniqueAdd: AddEntry[]; uniqueRemove: InwxRecord[] }>(
       (acc, curr) => {
         const removeIdx = acc.uniqueRemove.findIndex(entry =>
           isEntryEqual(entry, curr),
@@ -153,7 +154,7 @@ const getEntriesDiff = (
     );
 
   return uniqueRemove.reduce<{
-    toAdd: Entry[];
+    toAdd: AddEntry[];
     toRemove: InwxRecord[];
     toUpdate: UpdateEntry[];
   }>(

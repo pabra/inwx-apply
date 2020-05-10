@@ -91,8 +91,10 @@ type Entry = Omit<InwxRecord, 'id'> & {
 };
 type EntriesByType = Partial<Record<ResourceRecordType, Entry[]>>;
 type UpdateEntry = { old: InwxRecord; new: Entry };
+type AddEntry = Entry & { domain: string };
 
 export type {
+  AddEntry,
   Credentials,
   Config,
   EntriesByType,
