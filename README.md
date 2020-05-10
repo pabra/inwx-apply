@@ -220,11 +220,6 @@ add                www.example.com A       3600    0 1.2.3.4
 add                    example.com AAAA    3600    0 1:2:3::4
 add               mail.example.com AAAA    3600    0 1:2:3::6
 add                www.example.com AAAA    3600    0 1:2:3::4
-ERROR: bad response: {
-  response: { code: 2002, msg: 'Command use error' },
-  apiMethod: 'nameserver.info',
-  methodParams: { domain: 'example.net' }
-}
 ________________________example.net_________________________
 Act                           Name Type     TTL Prio Content
 add                    example.net SOA    86400    0 ns.inwx.de hostmaster@example.com
@@ -240,11 +235,6 @@ add                www.example.net A       3600    0 4.3.2.1
 add                 db.example.net AAAA    3600    0 1:2:3::5
 add                    example.net AAAA    3600    0 4:3:2::1
 add                www.example.net AAAA    3600    0 4:3:2::1
-ERROR: bad response: {
-  response: { code: 2002, msg: 'Command use error' },
-  apiMethod: 'nameserver.info',
-  methodParams: { domain: 'exämple.org' }
-}
 ________________________exämple.org_________________________
 Act                           Name Type     TTL Prio Content
 add             xn--exmple-cua.org SOA    86400    0 ns.inwx.de hostmaster@example.com
