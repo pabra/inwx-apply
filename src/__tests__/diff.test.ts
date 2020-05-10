@@ -2,8 +2,8 @@ import { getEntriesDiff } from '../utils';
 
 // prettier-ignore
 const testEntries1 = [
-  { id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-  { id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+  { id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+  { id: 2, domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
 ];
 
 // prettier-ignore
@@ -14,13 +14,13 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'c.example.com', content: '4.3.2.1', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'c.example.com', content: '4.3.2.1', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
-        { type: 'A', name: 'c.example.com', content: '4.3.2.1', prio: 0, ttl: 3600, },
+        { type: 'A', domain: 'example.com', name: 'c.example.com', content: '4.3.2.1', prio: 0, ttl: 3600, },
       ],
       toRemove: [
       ],
@@ -34,8 +34,8 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
@@ -57,8 +57,8 @@ const cases = [
       toAdd: [
       ],
       toRemove: [
-        { id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-        { id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+        { domain: 'example.com', id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+        { domain: 'example.com', id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       ],
       toUpdate: [
       ],
@@ -70,8 +70,8 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
@@ -80,8 +80,8 @@ const cases = [
       ],
       toUpdate: [
         {
-          old:{ id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+          old:{ id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
         },
       ],
     },
@@ -92,8 +92,8 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
@@ -102,8 +102,8 @@ const cases = [
       ],
       toUpdate: [
         {
-          old:{ id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+          old:{ id: 2, domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
         },
       ],
     },
@@ -113,13 +113,13 @@ const cases = [
     existing: [
     ],
     wanted: [
-      { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
-        { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-        { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+        { type: 'A', domain: 'example.com', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+        { type: 'A', domain: 'example.com', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       ],
       toRemove: [
       ],
@@ -133,24 +133,24 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'a.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
-      { type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
-        { type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+        { type: 'A', domain: 'example.com', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
       ],
       toRemove: [
       ],
       toUpdate: [
         {
-          old:{ id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'a.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+          old:{ id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
         },
         {
-          old:{ id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'b.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+          old:{ id: 2, domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
         },
       ],
     },
@@ -161,18 +161,18 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
       ],
       toRemove: [
-        { id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+        { id: 2, domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       ],
       toUpdate: [
         {
-          old:{ id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
+          old:{ id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
         },
       ],
     },
@@ -183,8 +183,8 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 10, ttl: 3600, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 20, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 10, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 20, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
@@ -193,12 +193,12 @@ const cases = [
       ],
       toUpdate: [
         {
-          old:{ id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio:  0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 10, ttl: 3600, } as const,
+          old:{ id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio:  0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 10, ttl: 3600, } as const,
         },
         {
-          old:{ id: 2, type: 'A', name: 'b.example.com', content: '1.2.3.4', prio:  0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 20, ttl: 3600, } as const,
+          old:{ id: 2, domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio:  0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 20, ttl: 3600, } as const,
         },
       ],
     },
@@ -209,8 +209,8 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
-      { type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 300, } as const,
-      { type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 300, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
       toAdd: [
@@ -219,8 +219,8 @@ const cases = [
       ],
       toUpdate: [
         {
-          old:{ id: 1, type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-          new:{        type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl:  300, } as const,
+          old:{ id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+          new:{        domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl:  300, } as const,
         },
       ],
     },
