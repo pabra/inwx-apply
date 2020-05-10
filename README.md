@@ -46,13 +46,13 @@ const credentials = require('./inwx_credentials.gitignore.json');
 const ttl = 3600;
 const ipV4 = {
   web: '1.2.3.4',
-  web2: '1.22.3.4',
+  web2: '4.3.2.1',
   db: '1.2.3.5',
   mail: '1.2.3.6',
 };
 const ipV6 = {
   web: '1:2:3::4',
-  web2: '1:22:3::4',
+  web2: '4:3:2::1',
   db: '1:2:3::5',
   mail: '1:2:3::6',
 };
@@ -84,7 +84,7 @@ const mxRecord = { prio: 10, ttl, name: '*', content: 'mail.example.com' };
 const entries = {
   credentials,
   // list of all domains handled by INWX
-  knownDomains: ['example.com', 'example.net', 'example.org'],
+  knownDomains: ['example.com', 'example.net', 'exämple.org'],
   // list of domains, that entries should not be modified (subset of knownDomains)
   ignoredDomains: [],
   resourceRecords: {
@@ -93,7 +93,10 @@ const entries = {
       SOA: [soaRecord],
       NS: nameServerSet,
       MX: [mxRecord],
-      CNAME: [{ ttl, name: 'mail.*', content: 'mail.example.com' }],
+      CNAME: [
+        { ttl, name: '*', content: 'example.com' },
+        { ttl, name: 'www.*', content: 'www.example.com' },
+      ],
     },
     'example.com': {
       A: [
@@ -106,19 +109,22 @@ const entries = {
         { ttl, name: 'www.*', content: ipV6.web },
         { ttl, name: 'mail.*', content: ipV6.mail },
       ],
-      CNAME: [], // do not apply CNAME from default "*"
+      // do not apply CNAME from default "*"
+      CNAME: [],
     },
     'example.net': {
+      // example.net already uses the new "web2" server
       A: [
         { ttl, name: '*', content: ipV4.web2 },
         { ttl, name: 'www.*', content: ipV4.web2 },
-        { ttl, name: 'db.*', content: ipV4.web2 },
+        { ttl, name: 'db.*', content: ipV4.db },
       ],
       AAAA: [
         { ttl, name: '*', content: ipV6.web2 },
         { ttl, name: 'www.*', content: ipV6.web2 },
-        { ttl, name: 'db.*', content: ipV6.web2 },
+        { ttl, name: 'db.*', content: ipV6.db },
       ],
+      CNAME: [],
     },
   },
 };
@@ -131,11 +137,11 @@ The exported JSON would be:
 ```json
 {
   "credentials": {
-    "username": "my_inwx_username",
-    "password": "my_inwx_password",
-    "sharedSecret": null
+    "username": "***",
+    "password": "***",
+    "sharedSecret": "***"
   },
-  "knownDomains": ["example.com", "example.net", "example.org"],
+  "knownDomains": ["example.com", "example.net", "exämple.org"],
   "ignoredDomains": [],
   "resourceRecords": {
     "*": {
@@ -162,7 +168,8 @@ The exported JSON would be:
         { "prio": 10, "ttl": 3600, "name": "*", "content": "mail.example.com" }
       ],
       "CNAME": [
-        { "ttl": 3600, "name": "mail.*", "content": "mail.example.com" }
+        { "ttl": 3600, "name": "*", "content": "example.com" },
+        { "ttl": 3600, "name": "www.*", "content": "www.example.com" }
       ]
     },
     "example.com": {
@@ -180,15 +187,16 @@ The exported JSON would be:
     },
     "example.net": {
       "A": [
-        { "ttl": 3600, "name": "*", "content": "1.22.3.4" },
-        { "ttl": 3600, "name": "www.*", "content": "1.22.3.4" },
-        { "ttl": 3600, "name": "db.*", "content": "1.22.3.4" }
+        { "ttl": 3600, "name": "*", "content": "4.3.2.1" },
+        { "ttl": 3600, "name": "www.*", "content": "4.3.2.1" },
+        { "ttl": 3600, "name": "db.*", "content": "1.2.3.5" }
       ],
       "AAAA": [
-        { "ttl": 3600, "name": "*", "content": "1:22:3::4" },
-        { "ttl": 3600, "name": "www.*", "content": "1:22:3::4" },
-        { "ttl": 3600, "name": "db.*", "content": "1:22:3::4" }
-      ]
+        { "ttl": 3600, "name": "*", "content": "4:3:2::1" },
+        { "ttl": 3600, "name": "www.*", "content": "4:3:2::1" },
+        { "ttl": 3600, "name": "db.*", "content": "1:2:3::5" }
+      ],
+      "CNAME": []
     }
   }
 }
@@ -196,42 +204,56 @@ The exported JSON would be:
 
 From that JSON `inwx-apply` will ensure, these entries will be present:
 
-```json
-[
-  { "ttl": 86400, "type": "SOA",   "name":      "example.com",  "content": "ns.inwx.de hostmaster@example.com", "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.com",  "content": "ns.inwx.de",        "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.com",  "content": "ns2.inwx.de",       "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.com",  "content": "ns3.inwx.eu",       "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.com",  "content": "ns4.inwx.com",      "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.com",  "content": "ns5.inwx.net",      "prio": 0 },
-  { "ttl":  3600, "type": "MX",    "name":      "example.com",  "content": "mail.example.com",  "prio": 10 },
-  { "ttl":  3600, "type": "A",     "name":      "example.com",  "content": "1.2.3.4",           "prio": 0 },
-  { "ttl":  3600, "type": "A",     "name": "mail.example.com",  "content": "1.2.3.6",           "prio": 0 },
-  { "ttl":  3600, "type": "A",     "name":  "www.example.com",  "content": "1.2.3.4",           "prio": 0 },
-  { "ttl":  3600, "type": "AAAA",  "name":      "example.com",  "content": "1:2:3::4",          "prio": 0 },
-  { "ttl":  3600, "type": "AAAA",  "name": "mail.example.com",  "content": "1:2:3::6",          "prio": 0 },
-  { "ttl":  3600, "type": "AAAA",  "name":  "www.example.com",  "content": "1:2:3::4",          "prio": 0 },
-  { "ttl": 86400, "type": "SOA",   "name":      "example.net",  "content": "ns.inwx.de hostmaster@example.com", "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.net",  "content": "ns.inwx.de",        "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.net",  "content": "ns2.inwx.de",       "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.net",  "content": "ns3.inwx.eu",       "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.net",  "content": "ns4.inwx.com",      "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.net",  "content": "ns5.inwx.net",      "prio": 0 },
-  { "ttl":  3600, "type": "MX",    "name":      "example.net",  "content": "mail.example.com",  "prio": 10 },
-  { "ttl":  3600, "type": "CNAME", "name": "mail.example.net",  "content": "mail.example.com",  "prio": 0 },
-  { "ttl":  3600, "type": "A",     "name":   "db.example.net",  "content": "1.22.3.4",          "prio": 0 },
-  { "ttl":  3600, "type": "A",     "name":      "example.net",  "content": "1.22.3.4",          "prio": 0 },
-  { "ttl":  3600, "type": "A",     "name":  "www.example.net",  "content": "1.22.3.4",          "prio": 0 },
-  { "ttl":  3600, "type": "AAAA",  "name":   "db.example.net",  "content": "1:22:3::4",         "prio": 0 },
-  { "ttl":  3600, "type": "AAAA",  "name":      "example.net",  "content": "1:22:3::4",         "prio": 0 },
-  { "ttl":  3600, "type": "AAAA",  "name":  "www.example.net",  "content": "1:22:3::4",         "prio": 0 },
-  { "ttl": 86400, "type": "SOA",   "name":      "example.org",  "content": "ns.inwx.de hostmaster@example.com", "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.org",  "content": "ns.inwx.de",        "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.org",  "content": "ns2.inwx.de",       "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.org",  "content": "ns3.inwx.eu",       "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.org",  "content": "ns4.inwx.com",      "prio": 0 },
-  { "ttl": 86400, "type": "NS",    "name":      "example.org",  "content": "ns5.inwx.net",      "prio": 0 },
-  { "ttl":  3600, "type": "MX",    "name":      "example.org",  "content": "mail.example.com",  "prio": 10 },
-  { "ttl":  3600, "type": "CNAME", "name": "mail.example.org",  "content": "mail.example.com",  "prio": 0 }
-]
+```txt
+________________________example.com_________________________
+Act                           Name Type     TTL Prio Content
+add                    example.com SOA    86400    0 ns.inwx.de hostmaster@example.com
+add                    example.com NS     86400    0 ns.inwx.de
+add                    example.com NS     86400    0 ns2.inwx.de
+add                    example.com NS     86400    0 ns3.inwx.eu
+add                    example.com NS     86400    0 ns4.inwx.com
+add                    example.com NS     86400    0 ns5.inwx.net
+add                    example.com MX      3600   10 mail.example.com
+add                    example.com A       3600    0 1.2.3.4
+add               mail.example.com A       3600    0 1.2.3.6
+add                www.example.com A       3600    0 1.2.3.4
+add                    example.com AAAA    3600    0 1:2:3::4
+add               mail.example.com AAAA    3600    0 1:2:3::6
+add                www.example.com AAAA    3600    0 1:2:3::4
+ERROR: bad response: {
+  response: { code: 2002, msg: 'Command use error' },
+  apiMethod: 'nameserver.info',
+  methodParams: { domain: 'example.net' }
+}
+________________________example.net_________________________
+Act                           Name Type     TTL Prio Content
+add                    example.net SOA    86400    0 ns.inwx.de hostmaster@example.com
+add                    example.net NS     86400    0 ns.inwx.de
+add                    example.net NS     86400    0 ns2.inwx.de
+add                    example.net NS     86400    0 ns3.inwx.eu
+add                    example.net NS     86400    0 ns4.inwx.com
+add                    example.net NS     86400    0 ns5.inwx.net
+add                    example.net MX      3600   10 mail.example.com
+add                 db.example.net A       3600    0 1.2.3.5
+add                    example.net A       3600    0 4.3.2.1
+add                www.example.net A       3600    0 4.3.2.1
+add                 db.example.net AAAA    3600    0 1:2:3::5
+add                    example.net AAAA    3600    0 4:3:2::1
+add                www.example.net AAAA    3600    0 4:3:2::1
+ERROR: bad response: {
+  response: { code: 2002, msg: 'Command use error' },
+  apiMethod: 'nameserver.info',
+  methodParams: { domain: 'exämple.org' }
+}
+________________________exämple.org_________________________
+Act                           Name Type     TTL Prio Content
+add             xn--exmple-cua.org SOA    86400    0 ns.inwx.de hostmaster@example.com
+add             xn--exmple-cua.org NS     86400    0 ns.inwx.de
+add             xn--exmple-cua.org NS     86400    0 ns2.inwx.de
+add             xn--exmple-cua.org NS     86400    0 ns3.inwx.eu
+add             xn--exmple-cua.org NS     86400    0 ns4.inwx.com
+add             xn--exmple-cua.org NS     86400    0 ns5.inwx.net
+add             xn--exmple-cua.org MX      3600   10 mail.example.com
+add         www.xn--exmple-cua.org CNAME   3600    0 www.example.com
+add             xn--exmple-cua.org CNAME   3600    0 example.com
 ```
