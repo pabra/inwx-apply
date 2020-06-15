@@ -17,7 +17,6 @@ import type {
 import {
   getEntriesDiff,
   getWantedEntries,
-  isKeyof,
   mainLogger as logger,
   replaceDomainPlaceholder,
 } from './utils';
@@ -206,11 +205,14 @@ const groupByType = (records: InwxRecord[]): InwxRecordsByType =>
   records.reduce<InwxRecordsByType>((acc, curr) => {
     const rrType = curr.type;
 
-    if (!isKeyof<{}>(acc, rrType)) {
-      acc[rrType] = [];
+    const arr = acc[rrType] ?? [];
+
+    arr.push(curr);
+
+    if (acc[rrType] === undefined) {
+      acc[rrType] = arr;
     }
 
-    acc[rrType]!.push(curr); // eslint-disable-line @typescript-eslint/no-non-null-assertion
     return acc;
   }, {});
 

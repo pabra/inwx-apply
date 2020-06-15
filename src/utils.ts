@@ -70,9 +70,11 @@ const getLogger = (
 
 const mainLogger = getLogger();
 
-const isKeyof = <T extends {}>(
+type Key = string | number | symbol;
+
+const isKeyof = <T extends Record<Key, any>>(
   obj: T,
-  key: string | number | symbol,
+  key: Key,
 ): key is keyof T => Object.prototype.hasOwnProperty.call(obj, key);
 
 const isEntryEqual = (a: Entry, b: Entry): boolean => {
@@ -174,7 +176,6 @@ const getEntriesDiff = (
 export {
   getEntriesDiff,
   getWantedEntries,
-  isKeyof,
   mainLogger,
   replaceDomainPlaceholder,
 };
