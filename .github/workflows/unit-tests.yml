@@ -13,12 +13,19 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         node: [10, 12, 14]
 
     name: ${{ matrix.os }} Node ${{ matrix.node }} cache
+
+    env:
+      OS: ${{ matrix.os }}
+      NODE: ${{ matrix.node }}
+
     steps:
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
         uses: actions/checkout@v2
@@ -50,3 +57,10 @@ jobs:
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
         run: npm run test:after-commit
+
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+        uses: codecov/codecov-action@v1.0.7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
+          env_vars: OS,NODE

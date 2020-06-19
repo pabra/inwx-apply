@@ -8,12 +8,14 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest]
         node: [12]
 
     name: ${{ matrix.os }} Node ${{ matrix.node }} cache
+
     steps:
       - uses: actions/checkout@v2
 

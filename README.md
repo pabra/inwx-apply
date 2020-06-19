@@ -1,5 +1,7 @@
 # INWX apply
 
+[![codecov](https://codecov.io/gh/pabra/inwx-apply/branch/master/graph/badge.svg)](https://codecov.io/gh/pabra/inwx-apply)
+
 Ensure DNS resource record entries from a JSON (exporting) file are applied
 through INWX API.
 
