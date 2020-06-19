@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 12 }}
+      - if: ${{ matrix.os != 'windows-latest' && ( matrix.os == 'ubuntu-latest' || matrix.node == 12 ) }}
         name: Get npm cache directory
         id: npm-cache
         run: |
