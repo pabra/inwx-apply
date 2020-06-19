@@ -18,7 +18,7 @@
     "test": "jest",
     "pretest:coverage": "npm run clean:coverage",
     "test:coverage": "jest --coverage",
-    "test:after-commit": "run-p format:check lint test build:check",
+    "test:after-commit": "run-p format:check lint test:coverage build:check",
     "test:before-publish": "run-p format:check lint test build",
     "prebuild:cjs": "npm run clean:build:cjs",
     "build:cjs": "tsc -p tsconfig.cjs.json",
