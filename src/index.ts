@@ -1,6 +1,7 @@
 import c from 'ansi-colors';
 import { ApiClient, Language } from 'domrobot-client';
 import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
+import { rootLogger } from './logging';
 import { config as rtConfig } from './types';
 import type {
   AddEntry,
@@ -17,17 +18,18 @@ import type {
 import {
   getEntriesDiff,
   getWantedEntries,
-  mainLogger as logger,
   replaceDomainPlaceholder,
 } from './utils';
 
-const getConfig = (path: string): Config => {
+const indexLogger = rootLogger.getLogger({ name: 'index' });
+
+const getConfig = (path: string, logger = indexLogger): Config => {
   const conf = JSON.parse(require(path)); // eslint-disable-line @typescript-eslint/no-var-requires
   const validated = rtConfig.validate(conf);
 
   if (!validated.success) {
     const { message, key } = validated;
-    logger.warn({ message, key, conf: { ...conf, credentials: '***' } });
+    logger.warning(message, { key, conf: { ...conf, credentials: '***' } });
     throw new Error(message);
   }
 
@@ -41,12 +43,13 @@ const assertApiResponse = async (
   expectedCode = 1000,
   apiMethod?: string,
   methodParams?: any,
+  logger = indexLogger,
 ): Promise<void> => {
   if (response.code !== expectedCode) {
     if (onErrorLogout) {
       await logout(apiClient); // eslint-disable-line @typescript-eslint/no-use-before-define
     }
-    logger.error('bad response:', { response, apiMethod, methodParams });
+    logger.err('bad response:', { response, apiMethod, methodParams });
     throw new Error(
       `Api error. Code: ${response.code}  Message: ${
         response.msg
@@ -125,17 +128,19 @@ const logNotSubset = (
   subSet: string[],
   superSet: string[],
   msg = 'missing entries',
+  logger = indexLogger,
 ): void => {
   const missing = subSet.filter(entry => !superSet.includes(entry));
 
   if (missing.length) {
-    logger.warn(`${msg}:`, missing);
+    logger.warning(`${msg}:`, missing);
   }
 };
 
 const checkRegisteredDomains = (
   registeredDomains: RegisteredDomain[],
   expectedDomains: string[],
+  logger = indexLogger,
 ): void => {
   const registeredDomainNames = registeredDomains.map(o => o.domain);
 
@@ -154,7 +159,7 @@ const checkRegisteredDomains = (
   const notOk = registeredDomains.filter(o => o.status !== 'OK');
 
   if (notOk.length) {
-    logger.warn('not "OK" domains:', notOk);
+    logger.warning('not "OK" domains:', notOk);
   }
 };
 
@@ -297,6 +302,7 @@ const handleRecords = async (
   ignoredDomains: string[],
   doWrite = false,
   ignoreSanity = false,
+  logger = indexLogger,
 ): Promise<void> => {
   for (const registeredDomain of registeredDomains) {
     if (ignoredDomains.includes(registeredDomain.domain)) {
@@ -361,6 +367,7 @@ const main = async (
   configPath: string,
   doWrite = false,
   ignoreSanity = false,
+  logger = indexLogger,
 ): Promise<void> => {
   const config = getConfig(configPath);
   logger.debug('config:', {

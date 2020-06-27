@@ -1,7 +1,5 @@
-import c from 'ansi-colors';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { inspect } from 'util';
 import type {
   AddEntry,
   Entry,
@@ -10,67 +8,6 @@ import type {
   ResourceRecordPerDomain,
   UpdateEntry,
 } from './types';
-
-const logLevels = {
-  debug: 4,
-  log: 3,
-  info: 2,
-  warn: 1,
-  error: 0,
-} as const;
-
-const getLogger = (
-  initialLogLevel: keyof typeof logLevels = 'warn',
-): Record<keyof typeof logLevels, (...arg: any[]) => void> & {
-  setLevel: (level: keyof typeof logLevels) => void;
-} => {
-  let logLevel = initialLogLevel;
-  const logger = (
-    level: keyof typeof logLevels,
-    maxLevel: keyof typeof logLevels,
-    ...obj: any[]
-  ): void => {
-    if (logLevels[level] > logLevels[maxLevel]) {
-      return;
-    }
-
-    switch (level) {
-      case 'debug':
-      case 'log':
-        process.stderr.write(c.green(level.toUpperCase()) + ': ');
-        break;
-
-      case 'info':
-        process.stderr.write(c.blue(level.toUpperCase()) + ': ');
-        break;
-
-      case 'warn':
-        process.stderr.write(c.yellow(level.toUpperCase()) + ': ');
-        break;
-
-      case 'error':
-        process.stderr.write(c.red(level.toUpperCase()) + ': ');
-        break;
-    }
-    const args = { depth: null, colors: true };
-    process.stderr.write(
-      obj.map(o => (typeof o === 'string' ? o : inspect(o, args))).join(' ') +
-        '\n',
-    );
-  };
-
-  return {
-    setLevel: (newLogLevel: keyof typeof logLevels): void =>
-      void (logLevel = newLogLevel),
-    debug: (...args: any[]): void => logger('debug', logLevel, ...args),
-    log: (...args: any[]): void => logger('log', logLevel, ...args),
-    info: (...args: any[]): void => logger('info', logLevel, ...args),
-    warn: (...args: any[]): void => logger('warn', logLevel, ...args),
-    error: (...args: any[]): void => logger('error', logLevel, ...args),
-  };
-};
-
-const mainLogger = getLogger();
 
 type Key = string | number | symbol;
 
@@ -213,6 +150,5 @@ export {
   getOwnPackageJson,
   getOwnVersionString,
   getWantedEntries,
-  mainLogger,
   replaceDomainPlaceholder,
 };

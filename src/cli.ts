@@ -4,11 +4,10 @@ import arg from 'arg';
 import { existsSync } from 'fs';
 import { basename, resolve } from 'path';
 import { main } from './index';
-import {
-  getOwnPackageJson,
-  getOwnVersionString,
-  mainLogger as logger,
-} from './utils';
+import { debugFilter, rootLogger } from './logging';
+import { getOwnPackageJson, getOwnVersionString } from './utils';
+
+let handler = rootLogger.handlers[0];
 
 const defaultEntriesFile = './inwxDnsEntries.js';
 
@@ -31,10 +30,16 @@ const args = arg({
 });
 
 if (args['--debug']) {
-  logger.setLevel('debug');
+  handler = { ...handler, filter: debugFilter };
 }
 
-logger.debug('args:', args);
+const cliLogger = rootLogger.getLogger({ name: 'cli', handlers: [handler] });
+const indexLogger = rootLogger.getLogger({
+  name: 'index',
+  handlers: [handler],
+});
+
+cliLogger.debug('args:', args);
 
 const showHelp = (): void => {
   const { description } = getOwnPackageJson();
@@ -81,13 +86,13 @@ if (args['--help']) {
   const entriesFile = resolve(args['--file'] || defaultEntriesFile);
   const ignoreSanity = Boolean(args['--insane']);
 
-  logger.debug('doWrite:', doWrite);
-  logger.debug('entriesFile:', entriesFile);
-  logger.debug('ignoreSanity:', ignoreSanity);
+  cliLogger.debug('doWrite:', doWrite);
+  cliLogger.debug('entriesFile:', entriesFile);
+  cliLogger.debug('ignoreSanity:', ignoreSanity);
 
   if (!existsSync(entriesFile)) {
-    logger.warn(`no file: ${entriesFile}`);
+    cliLogger.warning(`no file: ${entriesFile}`);
   } else {
-    main(entriesFile, doWrite, ignoreSanity);
+    main(entriesFile, doWrite, ignoreSanity, indexLogger);
   }
 }
