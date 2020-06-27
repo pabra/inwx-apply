@@ -1,5 +1,5 @@
 import getLogger, {
-  consoleTextHandler,
+  consoleRawDataHandler,
   getMaxLevelFilter,
 } from '@pabra/logger';
 
@@ -7,7 +7,7 @@ const debugFilter = getMaxLevelFilter('debug');
 
 const rootLogger = getLogger({
   name: 'inwx-apply',
-  handlers: [consoleTextHandler],
+  handlers: [consoleRawDataHandler],
 });
 
 export { rootLogger, debugFilter };
