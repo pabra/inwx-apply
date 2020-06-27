@@ -4,7 +4,11 @@ import arg from 'arg';
 import { existsSync } from 'fs';
 import { basename, resolve } from 'path';
 import { main } from './index';
-import { mainLogger as logger } from './utils';
+import {
+  getOwnPackageJson,
+  getOwnVersionString,
+  mainLogger as logger,
+} from './utils';
 
 const defaultEntriesFile = './inwxDnsEntries.js';
 
@@ -33,40 +37,39 @@ if (args['--debug']) {
 logger.debug('args:', args);
 
 const showHelp = (): void => {
-  process.stdout.write(
-    `usage ${basename(process.argv[1])} [options]
+  const { description } = getOwnPackageJson();
+  const help = [
+    getOwnVersionString(),
+    description,
+    '',
+    'USAGE:',
+    `    ${basename(process.argv[1])} [OPTIONS]`,
+    '',
+    'OPTIONS:',
+    '    -h, --help',
+    '        show this help',
+    '',
+    '    -v, --version',
+    '        show version',
+    '',
+    '    -d, --debug',
+    '        log debug output',
+    '',
+    '    -f <FILE_NAME>, --file=<FILE_NAME>',
+    '        path to DNS entries exporting file',
+    '',
+    '    -w, --write',
+    '        actually write entries through INWX API',
+    '',
+    '    -i, --insane',
+    '        ignore sanity checks',
+  ].join('\n');
 
-    Options:
-      -h, --help        show this help
-      -v, --version     show version
-      -d, --debug       log debug output
-      -f, --file        path to DNS entries exporting file
-      -w, --write       actually "write" entries through INWX API
-      -i, --insane      ignore sanity checks
-    \n`,
-  );
+  process.stdout.write(`${help}\n`);
 };
 
 const showVersion = (): void => {
-  let packageJson: any = {};
-
-  /* eslint-disable node/no-missing-require, @typescript-eslint/no-var-requires */
-  try {
-    packageJson = require('../package.json');
-  } catch (err1) {
-    if (err1.code !== 'MODULE_NOT_FOUND') {
-      throw err1;
-    }
-    try {
-      packageJson = require('../../package.json');
-    } catch (err2) {
-      if (err2.code !== 'MODULE_NOT_FOUND') {
-        throw err2;
-      }
-    }
-  }
-  /* eslint-enable node/no-missing-require, @typescript-eslint/no-var-requires */
-  process.stdout.write(`${packageJson.name} version: ${packageJson.version}\n`);
+  process.stdout.write(`${getOwnVersionString()}\n`);
 };
 
 if (args['--help']) {
