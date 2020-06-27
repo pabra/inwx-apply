@@ -411,4 +411,4 @@ const main = async (
   await logout(apiClient);
 };
 
-export { getConfig, main };
+export { main };
