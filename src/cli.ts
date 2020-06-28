@@ -7,8 +7,6 @@ import { main } from './index';
 import { debugFilter, rootLogger } from './logging';
 import { getOwnPackageJson, getOwnVersionString } from './utils';
 
-let handler = rootLogger.handlers[0];
-
 const defaultEntriesFile = './inwxDnsEntries.js';
 
 const args = arg({
@@ -29,9 +27,10 @@ const args = arg({
   '-i': '--insane',
 });
 
-if (args['--debug']) {
-  handler = { ...handler, filter: debugFilter };
-}
+const handler = {
+  ...rootLogger.handlers[0],
+  ...(args['--debug'] ? { filter: debugFilter } : null),
+};
 
 const cliLogger = rootLogger.getLogger({ name: 'cli', handlers: [handler] });
 const indexLogger = rootLogger.getLogger({
