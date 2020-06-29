@@ -1,13 +1,19 @@
 import getLogger, {
-  consoleRawDataHandler,
+  consoleTransporter,
   getMaxLevelFilter,
+  textWithoutDataFormatter,
 } from '@pabra/logger';
+import { args } from './cliArgs';
 
-const debugFilter = getMaxLevelFilter('debug');
-
-const rootLogger = getLogger({
+const logger = getLogger({
   name: 'inwx-apply',
-  handlers: [consoleRawDataHandler],
+  handlers: [
+    {
+      filter: getMaxLevelFilter(args['--debug'] ? 'debug' : 'warning'),
+      formatter: textWithoutDataFormatter,
+      transporter: consoleTransporter,
+    },
+  ],
 });
 
-export { rootLogger, debugFilter };
+export { logger };

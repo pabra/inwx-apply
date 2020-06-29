@@ -1,44 +1,16 @@
 #!/usr/bin/env node
 
-import arg from 'arg';
 import { existsSync } from 'fs';
 import { basename, resolve } from 'path';
+import { args } from './cliArgs';
 import { main } from './index';
-import { debugFilter, rootLogger } from './logging';
+import { logger as rootLogger } from './logging';
 import { getOwnPackageJson, getOwnVersionString } from './utils';
 
 const defaultEntriesFile = './inwxDnsEntries.js';
+const logger = rootLogger.getLogger({ name: 'cli' });
 
-const args = arg({
-  // Types
-  '--help': Boolean,
-  '--version': Boolean,
-  '--debug': Boolean,
-  '--file': String,
-  '--write': Boolean,
-  '--insane': Boolean,
-
-  // Aliases
-  '-h': '--help',
-  '-v': '--version',
-  '-d': '--debug',
-  '-f': '--file',
-  '-w': '--write',
-  '-i': '--insane',
-});
-
-const handler = {
-  ...rootLogger.handlers[0],
-  ...(args['--debug'] ? { filter: debugFilter } : null),
-};
-
-const cliLogger = rootLogger.getLogger({ name: 'cli', handlers: [handler] });
-const indexLogger = rootLogger.getLogger({
-  name: 'index',
-  handlers: [handler],
-});
-
-cliLogger.debug('args:', args);
+logger.debug('args:', args);
 
 const showHelp = (): void => {
   const { description } = getOwnPackageJson();
@@ -85,13 +57,13 @@ if (args['--help']) {
   const entriesFile = resolve(args['--file'] || defaultEntriesFile);
   const ignoreSanity = Boolean(args['--insane']);
 
-  cliLogger.debug('doWrite:', doWrite);
-  cliLogger.debug('entriesFile:', entriesFile);
-  cliLogger.debug('ignoreSanity:', ignoreSanity);
+  logger.debug('doWrite:', doWrite);
+  logger.debug('entriesFile:', entriesFile);
+  logger.debug('ignoreSanity:', ignoreSanity);
 
   if (!existsSync(entriesFile)) {
-    cliLogger.warning(`no file: ${entriesFile}`);
+    logger.warning(`no file: ${entriesFile}`);
   } else {
-    main(entriesFile, doWrite, ignoreSanity, indexLogger);
+    main(entriesFile, doWrite, ignoreSanity);
   }
 }

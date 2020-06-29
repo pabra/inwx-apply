@@ -1,7 +1,7 @@
 import c from 'ansi-colors';
 import { ApiClient, Language } from 'domrobot-client';
 import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
-import { rootLogger } from './logging';
+import { logger as rootLogger } from './logging';
 import { config as rtConfig } from './types';
 import type {
   AddEntry,
@@ -21,9 +21,9 @@ import {
   replaceDomainPlaceholder,
 } from './utils';
 
-const indexLogger = rootLogger.getLogger({ name: 'index' });
+const logger = rootLogger.getLogger({ name: 'index' });
 
-const getConfig = (path: string, logger = indexLogger): Config => {
+const getConfig = (path: string): Config => {
   const conf = JSON.parse(require(path)); // eslint-disable-line @typescript-eslint/no-var-requires
   const validated = rtConfig.validate(conf);
 
@@ -43,7 +43,6 @@ const assertApiResponse = async (
   expectedCode = 1000,
   apiMethod?: string,
   methodParams?: any,
-  logger = indexLogger,
 ): Promise<void> => {
   if (response.code !== expectedCode) {
     if (onErrorLogout) {
@@ -128,7 +127,6 @@ const logNotSubset = (
   subSet: string[],
   superSet: string[],
   msg = 'missing entries',
-  logger = indexLogger,
 ): void => {
   const missing = subSet.filter(entry => !superSet.includes(entry));
 
@@ -140,7 +138,6 @@ const logNotSubset = (
 const checkRegisteredDomains = (
   registeredDomains: RegisteredDomain[],
   expectedDomains: string[],
-  logger = indexLogger,
 ): void => {
   const registeredDomainNames = registeredDomains.map(o => o.domain);
 
@@ -302,7 +299,6 @@ const handleRecords = async (
   ignoredDomains: string[],
   doWrite = false,
   ignoreSanity = false,
-  logger = indexLogger,
 ): Promise<void> => {
   for (const registeredDomain of registeredDomains) {
     if (ignoredDomains.includes(registeredDomain.domain)) {
@@ -367,7 +363,6 @@ const main = async (
   configPath: string,
   doWrite = false,
   ignoreSanity = false,
-  logger = indexLogger,
 ): Promise<void> => {
   const config = getConfig(configPath);
   logger.debug('config:', {
