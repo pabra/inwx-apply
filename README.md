@@ -1,5 +1,7 @@
 # INWX apply
 
+[![unit-tests](https://github.com/pabra/inwx-apply/workflows/unit-tests/badge.svg?branch=master)](https://github.com/pabra/inwx-apply/actions?query=branch%3Amaster+workflow%3Aunit-tests)
+[![unit-tests](https://github.com/pabra/inwx-apply/workflows/npm-publish/badge.svg)](https://github.com/pabra/inwx-apply/actions?query=workflow%3Anpm-publish)
 [![codecov](https://codecov.io/gh/pabra/inwx-apply/branch/master/graph/badge.svg)](https://codecov.io/gh/pabra/inwx-apply)
 
 Ensure DNS resource record entries from a JSON (exporting) file are applied
