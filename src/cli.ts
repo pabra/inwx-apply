@@ -8,7 +8,7 @@ import { logger as rootLogger } from './logging';
 import { getOwnPackageJson, getOwnVersionString } from './utils';
 
 const defaultEntriesFile = './inwxDnsEntries.js';
-const logger = rootLogger.getLogger({ name: 'cli' });
+const logger = rootLogger.getLogger('cli');
 
 logger.debug('args:', args);
 

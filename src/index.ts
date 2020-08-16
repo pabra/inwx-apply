@@ -21,7 +21,7 @@ import {
   replaceDomainPlaceholder,
 } from './utils';
 
-const logger = rootLogger.getLogger({ name: 'index' });
+const logger = rootLogger.getLogger('index');
 
 const getConfig = (path: string): Config => {
   const conf = JSON.parse(require(path)); // eslint-disable-line @typescript-eslint/no-var-requires
