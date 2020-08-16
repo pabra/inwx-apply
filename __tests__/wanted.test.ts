@@ -1,4 +1,4 @@
-import { getWantedEntries } from '../utils';
+import { getWantedEntries } from '../src/utils';
 
 // _prettier-ignore
 const testEntries1 = {

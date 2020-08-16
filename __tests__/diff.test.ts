@@ -1,4 +1,4 @@
-import { getEntriesDiff } from '../utils';
+import { getEntriesDiff } from '../src/utils';
 
 // prettier-ignore
 const testEntries1 = [
