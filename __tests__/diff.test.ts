@@ -229,6 +229,7 @@ const cases = [
 
 describe('map entries', () => {
   cases.forEach(testCase => {
+    // eslint-disable-next-line jest/valid-title
     test(testCase.it, () =>
       expect(getEntriesDiff(testCase.wanted, testCase.existing)).toEqual(
         testCase.expected,

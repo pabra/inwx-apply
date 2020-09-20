@@ -58,6 +58,7 @@ const cases = [
 
 describe('get wanted entries', () => {
   cases.forEach(testCase => {
+    // eslint-disable-next-line jest/valid-title
     test(testCase.it, () =>
       expect(getWantedEntries(testCase.entries, testCase.domain)).toEqual(
         testCase.expected,

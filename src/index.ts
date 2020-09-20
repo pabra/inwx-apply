@@ -2,7 +2,6 @@ import c from 'ansi-colors';
 import { ApiClient, Language } from 'domrobot-client';
 import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
 import { logger as rootLogger } from './logging';
-import { config as rtConfig } from './types';
 import type {
   AddEntry,
   Config,
@@ -15,6 +14,7 @@ import type {
   ResourceRecordType,
   UpdateEntry,
 } from './types';
+import { config as rtConfig } from './types';
 import {
   getEntriesDiff,
   getWantedEntries,
