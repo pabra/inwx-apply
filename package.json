@@ -68,6 +68,6 @@
     "arg": "^5.0.0",
     "domrobot-client": "^3.0.2",
     "punycode": "^2.1.1",
-    "runtypes": "^5.0.1"
+    "runtypes": "^6.0.0"
   }
 }
