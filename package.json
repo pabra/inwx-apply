@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "@pabra/logger": "^1.0.4",
+    "@pabra/sortby": "^1.0.1",
     "ansi-colors": "^4.1.1",
     "arg": "^5.0.0",
     "domrobot-client": "^3.0.2",

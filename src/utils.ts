@@ -1,3 +1,4 @@
+import { by } from '@pabra/sortby';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import type {
@@ -33,29 +34,7 @@ const isEntryEqual = (a: Entry, b: Entry): boolean => {
   );
 };
 
-const entrySorter = (a: Entry, b: Entry): number =>
-  a.type > b.type
-    ? +1
-    : a.type < b.type
-    ? -1
-    : a.name > b.name
-    ? +1
-    : a.name < b.name
-    ? -1
-    : a.content > b.content
-    ? +1
-    : a.content < b.content
-    ? -1
-    : a.prio > b.prio
-    ? +1
-    : a.prio < b.prio
-    ? -1
-    : a.ttl > b.ttl
-    ? +1
-    : a.ttl < b.ttl
-    ? -1
-    : 0;
-
+const byEntry = by('type', 'name', 'content', 'prio', 'ttl');
 const replaceDomainPlaceholder = (entry: string, idnaDomain: string): string =>
   entry.replace(/\*$/, idnaDomain);
 
@@ -78,7 +57,7 @@ const getEntriesDiff = (
   existing: InwxRecord[],
 ): { toAdd: AddEntry[]; toRemove: InwxRecord[]; toUpdate: UpdateEntry[] } => {
   const { uniqueAdd, uniqueRemove } = wanted
-    .sort(entrySorter)
+    .sort(byEntry)
     .reduce<{ uniqueAdd: AddEntry[]; uniqueRemove: InwxRecord[] }>(
       (acc, curr) => {
         const removeIdx = acc.uniqueRemove.findIndex(entry =>
@@ -91,7 +70,7 @@ const getEntriesDiff = (
         }
         return acc;
       },
-      { uniqueAdd: [], uniqueRemove: [...existing].sort(entrySorter) },
+      { uniqueAdd: [], uniqueRemove: [...existing].sort(byEntry) },
     );
 
   return uniqueRemove.reduce<{
