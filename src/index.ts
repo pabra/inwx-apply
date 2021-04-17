@@ -1,6 +1,7 @@
 import c from 'ansi-colors';
 import { ApiClient, Language } from 'domrobot-client';
 import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
+import sr from 'simple-runtypes';
 import { logger as rootLogger } from './logging';
 import type {
   AddEntry,
@@ -25,15 +26,15 @@ const logger = rootLogger.getLogger('index');
 
 const getConfig = (path: string): Config => {
   const conf = JSON.parse(require(path)); // eslint-disable-line @typescript-eslint/no-var-requires
-  const validated = rtConfig.validate(conf);
+  const configValidation = sr.use(rtConfig, conf);
 
-  if (!validated.success) {
-    const { message, key } = validated;
-    logger.warning(message, { key, conf: { ...conf, credentials: '***' } });
-    throw new Error(message);
+  if (!configValidation.ok) {
+    const msg = sr.getFormattedError(configValidation.error);
+    logger.warning(msg, { conf: { ...conf, credentials: '***' } });
+    throw new Error(msg);
   }
 
-  return validated.value;
+  return configValidation.result;
 };
 
 const assertApiResponse = async (

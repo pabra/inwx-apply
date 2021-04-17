@@ -1,76 +1,71 @@
-import {
-  Array,
-  Dictionary,
-  Null,
-  Number,
-  Partial as RtPartial,
-  Record as RtRecord,
-  Static,
-  String,
-  Union,
-} from 'runtypes';
+import sr from 'simple-runtypes';
 
-const credentials = RtRecord({
-  username: String,
-  password: String,
-  sharedSecret: Union(String, Null),
+const credentialsRt = sr.record({
+  username: sr.string(),
+  password: sr.string(),
+  sharedSecret: sr.union(sr.string(), sr.null()),
 });
 
-const resourceRecord = RtRecord({
-  ttl: Number,
-  name: String,
-  content: String,
-}).And(
-  RtPartial({
-    prio: Number,
-    replaceBeforeCompareContent: RtRecord({
-      searchRe: String,
-      flags: String,
-      replace: String,
+const resourceRecordRt = sr.intersection(
+  sr.record({
+    ttl: sr.number(),
+    name: sr.string(),
+    content: sr.string(),
+  }),
+  sr.partial(
+    sr.record({
+      prio: sr.number(),
+      replaceBeforeCompareContent: sr.record({
+        searchRe: sr.string(),
+        flags: sr.string(),
+        replace: sr.string(),
+      }),
     }),
+  ),
+);
+
+const resourceRecordsByTypeRt = sr.partial(
+  sr.record({
+    A: sr.array(resourceRecordRt),
+    AAAA: sr.array(resourceRecordRt),
+    AFSDB: sr.array(resourceRecordRt),
+    CAA: sr.array(resourceRecordRt),
+    CERT: sr.array(resourceRecordRt),
+    CNAME: sr.array(resourceRecordRt),
+    HINFO: sr.array(resourceRecordRt),
+    KEY: sr.array(resourceRecordRt),
+    LOC: sr.array(resourceRecordRt),
+    MX: sr.array(resourceRecordRt),
+    NAPTR: sr.array(resourceRecordRt),
+    NS: sr.array(resourceRecordRt),
+    PTR: sr.array(resourceRecordRt),
+    RP: sr.array(resourceRecordRt),
+    SOA: sr.array(resourceRecordRt),
+    SRV: sr.array(resourceRecordRt),
+    SSHFP: sr.array(resourceRecordRt),
+    TLSA: sr.array(resourceRecordRt),
+    TXT: sr.array(resourceRecordRt),
+    URL: sr.array(resourceRecordRt),
   }),
 );
 
-const resourceRecordsByType = RtPartial({
-  A: Array(resourceRecord),
-  AAAA: Array(resourceRecord),
-  AFSDB: Array(resourceRecord),
-  CAA: Array(resourceRecord),
-  CERT: Array(resourceRecord),
-  CNAME: Array(resourceRecord),
-  HINFO: Array(resourceRecord),
-  KEY: Array(resourceRecord),
-  LOC: Array(resourceRecord),
-  MX: Array(resourceRecord),
-  NAPTR: Array(resourceRecord),
-  NS: Array(resourceRecord),
-  PTR: Array(resourceRecord),
-  RP: Array(resourceRecord),
-  SOA: Array(resourceRecord),
-  SRV: Array(resourceRecord),
-  SSHFP: Array(resourceRecord),
-  TLSA: Array(resourceRecord),
-  TXT: Array(resourceRecord),
-  URL: Array(resourceRecord),
-});
-
-const resourceRecordsPerDomain = Dictionary(
-  resourceRecordsByType,
-  'string', // that's the domain name
+const resourceRecordsPerDomainRt = sr.dictionary(
+  sr.string(), // that's the domain name
+  resourceRecordsByTypeRt,
 );
 
-const config = RtRecord({
-  credentials: credentials,
-  knownDomains: Array(String),
-  ignoredDomains: Array(String),
-  resourceRecords: resourceRecordsPerDomain,
+const config = sr.record({
+  credentials: credentialsRt,
+  knownDomains: sr.array(sr.string()),
+  ignoredDomains: sr.array(sr.string()),
+  resourceRecords: resourceRecordsPerDomainRt,
 });
 
-type ResourceRecordPerDomain = Static<typeof resourceRecordsPerDomain>;
-type ResourceRecordByType = Static<typeof resourceRecordsByType>;
-// type ResourceRecord = Static<typeof resourceRecord>;
-type Credentials = Static<typeof credentials>;
-type Config = Static<typeof config>;
+type ResourceRecordPerDomain = ReturnType<typeof resourceRecordsPerDomainRt>;
+type ResourceRecordByType = ReturnType<typeof resourceRecordsByTypeRt>;
+// type ResourceRecord = ReturnType<typeof resourceRecordRt>;
+type Credentials = ReturnType<typeof credentialsRt>;
+type Config = ReturnType<typeof config>;
 type ResourceRecordType = keyof ResourceRecordByType;
 interface RegisteredDomain {
   domain: string;
