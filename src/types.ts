@@ -6,23 +6,19 @@ const credentialsRt = sr.record({
   sharedSecret: sr.union(sr.string(), sr.null()),
 });
 
-const resourceRecordRt = sr.intersection(
-  sr.record({
-    ttl: sr.number(),
-    name: sr.string(),
-    content: sr.string(),
-  }),
-  sr.partial(
+const resourceRecordRt = sr.record({
+  ttl: sr.number(),
+  name: sr.string(),
+  content: sr.string(),
+  prio: sr.optional(sr.number()),
+  replaceBeforeCompareContent: sr.optional(
     sr.record({
-      prio: sr.number(),
-      replaceBeforeCompareContent: sr.record({
-        searchRe: sr.string(),
-        flags: sr.string(),
-        replace: sr.string(),
-      }),
+      searchRe: sr.string(),
+      flags: sr.string(),
+      replace: sr.string(),
     }),
   ),
-);
+});
 
 const resourceRecordsByTypeRt = sr.partial(
   sr.record({
