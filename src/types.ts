@@ -1,4 +1,4 @@
-import sr from 'simple-runtypes';
+import * as sr from 'simple-runtypes';
 
 const credentialsRt = sr.record({
   username: sr.string(),
