@@ -1,7 +1,7 @@
 import c from 'ansi-colors';
 import { ApiClient, Language } from 'domrobot-client';
 import { toASCII } from 'punycode'; // eslint-disable-line node/no-deprecated-api
-import sr from 'simple-runtypes';
+import * as sr from 'simple-runtypes';
 import { logger as rootLogger } from './logging';
 import type {
   AddEntry,
