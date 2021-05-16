@@ -314,12 +314,12 @@ const handleRecords = async (
     const currentEntries = groupByType(
       await getDomainEntries(apiClient, registeredDomain.domain, ignoreSanity),
     );
-    const rrTypes = ([
-      ...Object.keys(wantedEntries),
-      ...Object.keys(currentEntries),
-    ] as ResourceRecordType[]).filter(
-      (curr, i, arr) => i === arr.indexOf(curr),
-    );
+    const rrTypes = (
+      [
+        ...Object.keys(wantedEntries),
+        ...Object.keys(currentEntries),
+      ] as ResourceRecordType[]
+    ).filter((curr, i, arr) => i === arr.indexOf(curr));
 
     centeredHeadline(registeredDomain.domain);
     printDiffHeader();
