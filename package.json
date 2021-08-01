@@ -69,6 +69,7 @@
     "arg": "^5.0.0",
     "domrobot-client": "^3.0.2",
     "punycode": "^2.1.1",
-    "simple-runtypes": "^7.1.0"
+    "simple-runtypes": "^7.1.0",
+    "tslib": "^2.3.0"
   }
 }
