@@ -76,6 +76,7 @@ jobs:
           echo 'json: ${{ steps.package_json.outputs.json }}'
           echo "fromJSON: '${{ fromJSON(steps.package_json.outputs.json) }}'"
           echo "author: '${{ fromJSON(steps.package_json.outputs.json).author }}'"
+          echo "scripts: '${{ fromJSON(steps.package_json.outputs.json).scripts }}'"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
