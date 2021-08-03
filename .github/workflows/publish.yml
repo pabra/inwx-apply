@@ -92,6 +92,8 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: pabra/inwx-apply
+          labels: |
+            org.opencontainers.image.authors=${{ fromJSON( steps.package_json.outputs.json ).author }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
