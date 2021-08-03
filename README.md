@@ -1,9 +1,10 @@
 # INWX apply
 
-[![npm version](https://badge.fury.io/js/inwx-apply.svg)](https://www.npmjs.com/package/inwx-apply)
+[![npm version](https://img.shields.io/npm/v/inwx-apply?label=version&logo=npm)](https://www.npmjs.com/package/inwx-apply)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/pabra/inwx-apply/latest?logo=docker)](https://hub.docker.com/r/pabra/inwx-apply)
+[![Codecov](https://img.shields.io/codecov/c/github/pabra/inwx-apply/master?logo=codecov)](https://codecov.io/gh/pabra/inwx-apply)
 [![unit-tests](https://github.com/pabra/inwx-apply/workflows/unit-tests/badge.svg?branch=master)](https://github.com/pabra/inwx-apply/actions?query=branch%3Amaster+workflow%3Aunit-tests)
 [![publish](https://github.com/pabra/inwx-apply/workflows/publish/badge.svg)](https://github.com/pabra/inwx-apply/actions?query=workflow%3Apublish)
-[![codecov](https://codecov.io/gh/pabra/inwx-apply/branch/master/graph/badge.svg)](https://codecov.io/gh/pabra/inwx-apply)
 
 Ensure DNS resource record entries from a JSON (exporting) file are applied
 through INWX API.
@@ -44,7 +45,9 @@ docker run \
 
 ### Run pre-build image from docker hub
 
-I've create a shell script for myself
+- [`v0.1.26`, `latest`](https://github.com/pabra/inwx-apply/blob/v0.1.26/Dockerfile)
+
+I've created a shell script for myself
 
 ```sh
 #!/bin/sh
@@ -52,11 +55,16 @@ I've create a shell script for myself
 IMAGE_NAME=pabra/inwx-apply
 IMAGE_TAG=latest
 
-CREDENTIALS_FILE=/path/to/credentials.json
-ENTRIES_FILE=/path/to/inwxDnsEntries.js
+if [ "$1" = "pull" ] || [ "$1" = "--pull" ]; then
+    docker pull "${IMAGE_NAME}:${IMAGE_TAG}"
+    exit $?
+fi
 
-CREDENTIALS_FILE_BASENAME=$(basename ${CREDENTIALS_FILE})
-ENTRIES_FILE_BASENAME=$(basename ${ENTRIES_FILE})
+CREDENTIALS_FILE="$(pwd)/credentials.gitignore.json"
+ENTRIES_FILE="$(pwd)/inwxDnsEntries.js"
+
+CREDENTIALS_FILE_BASENAME=$(basename "${CREDENTIALS_FILE}")
+ENTRIES_FILE_BASENAME=$(basename "${ENTRIES_FILE}")
 
 docker run \
     --rm \
