@@ -73,7 +73,7 @@ jobs:
       - name: debug package.json
         run: |
           set -ex
-          echo "json: '${{ steps.package_json.outputs.json }}'"
+          echo 'json: ${{ steps.package_json.outputs.json }}'
           echo "fromJSON: '${{ fromJSON(steps.package_json.outputs.json) }}'"
           echo "author: '${{ fromJSON(steps.package_json.outputs.json).author }}'"
 
