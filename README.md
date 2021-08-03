@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/inwx-apply.svg)](https://www.npmjs.com/package/inwx-apply)
 [![unit-tests](https://github.com/pabra/inwx-apply/workflows/unit-tests/badge.svg?branch=master)](https://github.com/pabra/inwx-apply/actions?query=branch%3Amaster+workflow%3Aunit-tests)
-[![npm-publish](https://github.com/pabra/inwx-apply/workflows/npm-publish/badge.svg)](https://github.com/pabra/inwx-apply/actions?query=workflow%3Anpm-publish)
+[![publish](https://github.com/pabra/inwx-apply/workflows/publish/badge.svg)](https://github.com/pabra/inwx-apply/actions?query=workflow%3Apublish)
 [![codecov](https://codecov.io/gh/pabra/inwx-apply/branch/master/graph/badge.svg)](https://codecov.io/gh/pabra/inwx-apply)
 
 Ensure DNS resource record entries from a JSON (exporting) file are applied
