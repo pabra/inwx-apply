@@ -59,6 +59,24 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: get package.json
+        id: package_json
+        run: |
+          PACKAGE_JSON="$( cat package.json )"
+          echo ::set-output name=json::${PACKAGE_JSON}
+
+      - name: debug package.json
+        run: |
+          set -ex
+          echo "json: '${{ steps.package_json.outputs.json }}'"
+          echo "fromJSON: '${{ fromJSON(steps.package_json.outputs.json) }}'"
+          echo "author: '${{ fromJSON(steps.package_json.outputs.json).author }}'"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
