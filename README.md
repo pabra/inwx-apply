@@ -18,7 +18,7 @@ I wanted a text based file that:
 The result is this tool that takes a JSON (exporting) file as input and ensures
 that exactly these entries are set at inwx name servers for you.
 
-## Install
+## Install (npm)
 
 ```bash
 npm install -g inwx-apply
@@ -26,24 +26,45 @@ npm install -g inwx-apply
 
 ## Docker
 
-### Build
+### Build image yourself
 
 ```bash
-docker build \
-  -t pabra/inwx-apply:dev-$( git rev-list --count $( git branch --show-current ) ) \
-  --label org.opencontainers.image.description="$( npm view . description )" \
-  --label org.opencontainers.image.title="$( npm view . name )" \
-  --label org.opencontainers.image.authors="$( npm view . author )" \
-  --label org.opencontainers.image.created="$( date --utc --rfc-3339=seconds )" \
-  .
+docker build -t inwx-apply .
 ```
 
-### Run
+### Run self build image
 
 ```bash
 docker run \
   --rm \
-  pabra/inwx-apply \
+  -v /path/to/credentials.json:/data/credentials.json:ro \
+  -v /path/to/inwxDnsEntries.js:/data/inwxDnsEntries.js:ro \
+  inwx-apply
+```
+
+### Run pre-build image from docker hub
+
+I've create a shell script for myself
+
+```sh
+#!/bin/sh
+
+IMAGE_NAME=pabra/inwx-apply
+IMAGE_TAG=latest
+
+CREDENTIALS_FILE=/path/to/credentials.json
+ENTRIES_FILE=/path/to/inwxDnsEntries.js
+
+CREDENTIALS_FILE_BASENAME=$(basename ${CREDENTIALS_FILE})
+ENTRIES_FILE_BASENAME=$(basename ${ENTRIES_FILE})
+
+docker run \
+    --rm \
+    -v "${CREDENTIALS_FILE}:/data/${CREDENTIALS_FILE_BASENAME}:ro" \
+    -v "${ENTRIES_FILE}:/data/${ENTRIES_FILE_BASENAME}:ro" \
+    "${IMAGE_NAME}:${IMAGE_TAG}" \
+    --file "${ENTRIES_FILE_BASENAME}" \
+    "$@"
 ```
 
 ## Usage
