@@ -29,6 +29,8 @@ jobs:
     steps:
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
         uses: actions/setup-node@v2
@@ -53,10 +55,10 @@ jobs:
             ${{ runner.os }}-node-
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
-        run: npm ci
-
-      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
-        run: npm run test:after-commit
+        run: |
+          set -e
+          npm ci
+          npm run test:after-commit
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
         uses: codecov/codecov-action@v2

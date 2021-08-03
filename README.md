@@ -24,6 +24,28 @@ that exactly these entries are set at inwx name servers for you.
 npm install -g inwx-apply
 ```
 
+## Docker
+
+### Build
+
+```bash
+docker build \
+  -t pabra/inwx-apply:dev-$( git rev-list --count $( git branch --show-current ) ) \
+  --label org.opencontainers.image.description="$( npm view . description )" \
+  --label org.opencontainers.image.title="$( npm view . name )" \
+  --label org.opencontainers.image.authors="$( npm view . author )" \
+  --label org.opencontainers.image.created="$( date --utc --rfc-3339=seconds )" \
+  .
+```
+
+### Run
+
+```bash
+docker run \
+  --rm \
+  pabra/inwx-apply \
+```
+
 ## Usage
 
 `inwx-apply` will look in your current work directory for a file named `inwxDnsEntries.js`
@@ -43,7 +65,7 @@ Create your git ignored credential file (eg: `inwx_credentials.gitignore.json`):
 }
 ```
 
-Create a js file that will import your credentials and export DSN entries as
+Create a js file that will import your credentials and export DNS entries as
 JSON (eg: `inwxDnsEntries.js`)
 
 ```javascript
