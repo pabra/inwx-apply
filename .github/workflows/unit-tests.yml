@@ -54,7 +54,6 @@ jobs:
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 14 }}
         run: |
-          set -e
           npm ci
           npm run test:after-commit
 
