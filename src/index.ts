@@ -196,7 +196,8 @@ const getDomainEntries = async (
     return response.record;
   } catch (err) {
     const reApiErr = /Code: (?:2303|2002)/;
-    if (ignoreSanity && reApiErr.test(err.message)) {
+
+    if (err instanceof Error && ignoreSanity && reApiErr.test(err.message)) {
       return [];
     } else {
       throw err;

@@ -19,7 +19,7 @@ const showHelp = (): void => {
     description,
     '',
     'USAGE:',
-    `    ${basename(process.argv[1])} [OPTIONS]`,
+    `    ${basename(process.argv[1] ?? '')} [OPTIONS]`,
     '',
     'OPTIONS:',
     '    -h, --help',

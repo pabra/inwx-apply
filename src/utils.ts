@@ -102,7 +102,7 @@ const getOwnPackageJson = (): Record<string, any> => {
     // while development, __dirname is src/ -> package.json must be one dir up
     return getPackageJson(join(__dirname, '..'));
   } catch (err) {
-    if (err.code !== 'ENOENT') {
+    if (!(err instanceof Error) || (err as any).code !== 'ENOENT') {
       throw err;
     }
   }
@@ -111,7 +111,7 @@ const getOwnPackageJson = (): Record<string, any> => {
     // after build, __dirname is dist/cjs/ -> package.json must be two dirs up
     return getPackageJson(join(__dirname, '..', '..'));
   } catch (err) {
-    if (err.code !== 'ENOENT') {
+    if (!(err instanceof Error) || (err as any).code !== 'ENOENT') {
       throw err;
     }
   }
