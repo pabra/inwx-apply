@@ -2,8 +2,9 @@ import { getEntriesDiff } from '../src/utils';
 
 // prettier-ignore
 const testEntries1 = [
-  { id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
-  { id: 2, domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+  { id: 1, domain: 'example.com', type: 'A',   name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+  { id: 2, domain: 'example.com', type: 'A',   name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+  { id: 3, domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
 ];
 
 // prettier-ignore
@@ -14,6 +15,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'c.example.com', content: '4.3.2.1', prio: 0, ttl: 3600, } as const,
@@ -34,6 +36,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
@@ -52,6 +55,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
     ],
     expected: {
       toAdd: [
@@ -70,6 +74,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
@@ -92,6 +97,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
@@ -113,6 +119,7 @@ const cases = [
     existing: [
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
@@ -120,6 +127,7 @@ const cases = [
       toAdd: [
         { type: 'A', domain: 'example.com', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
         { type: 'A', domain: 'example.com', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+        { type: 'SOA', domain: 'example.com', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       ],
       toRemove: [
       ],
@@ -133,6 +141,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
@@ -161,6 +170,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'c.example.com', content: '1.2.3.5', prio: 0, ttl: 3600, } as const,
     ],
     expected: {
@@ -183,6 +193,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 10, ttl: 3600, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 20, ttl: 3600, } as const,
     ],
@@ -209,6 +220,7 @@ const cases = [
       ...testEntries1,
     ],
     wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com 2022012104', prio: 0, ttl: 86400, } as const,
       { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 300, } as const,
       { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
     ],
@@ -222,6 +234,26 @@ const cases = [
           old:{ id: 1, domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
           new:{        domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl:  300, } as const,
         },
+      ],
+    },
+  },
+  {
+    it: 'should replace content before compare',
+    existing: [
+      ...testEntries1,
+    ],
+    wanted: [
+      { domain: 'example.com', type: 'SOA', name: 'example.com', content: 'ns.example.com hostmaster.example.com', prio: 0, ttl: 86400,
+        replaceBeforeCompareContent: { searchRe: /(?: \d+)+$/.source, flags: '', replace: '', }, } as const,
+      { domain: 'example.com', type: 'A', name: 'a.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+      { domain: 'example.com', type: 'A', name: 'b.example.com', content: '1.2.3.4', prio: 0, ttl: 3600, } as const,
+    ],
+    expected: {
+      toAdd: [
+      ],
+      toRemove: [
+      ],
+      toUpdate: [
       ],
     },
   },
