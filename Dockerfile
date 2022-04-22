@@ -1,5 +1,5 @@
 # use node:lts-alpine
-ARG BASE_IMAGE=node:14.17.4-alpine3.11
+ARG BASE_IMAGE=node:16.14.2-alpine
 
 FROM ${BASE_IMAGE} AS builder
 
