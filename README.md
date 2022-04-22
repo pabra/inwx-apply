@@ -45,7 +45,7 @@ docker run \
 
 ### Run pre-build image from docker hub
 
-- [`v0.1.26`, `latest`](https://github.com/pabra/inwx-apply/blob/v0.1.26/Dockerfile)
+- [`v0.1.29`, `latest`](https://github.com/pabra/inwx-apply/blob/v0.1.29/Dockerfile)
 
 I've created a shell script for myself
 
