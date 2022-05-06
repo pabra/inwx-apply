@@ -62,7 +62,7 @@ jobs:
           echo ::set-output name=json::${PACKAGE_JSON}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
