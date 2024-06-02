@@ -58,8 +58,7 @@ jobs:
       - name: get package.json
         id: package_json
         run: |
-          PACKAGE_JSON="$( cat package.json )"
-          echo ::set-output name=json::${PACKAGE_JSON}
+          echo "JSON=$( cat package.json )" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -75,7 +74,7 @@ jobs:
         with:
           images: pabra/inwx-apply
           labels: |
-            org.opencontainers.image.authors=${{ fromJSON( steps.package_json.outputs.json ).author }}
+            org.opencontainers.image.authors=${{ fromJSON( steps.package_json.outputs.JSON ).author }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
