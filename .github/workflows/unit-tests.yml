@@ -26,12 +26,12 @@ jobs:
 
     steps:
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -43,7 +43,7 @@ jobs:
 
       # getting and storing cache takes about 1:20 min each on windows
       - if: ${{ matrix.os != 'windows-latest' && ( matrix.os == 'ubuntu-latest' || matrix.node == 16 ) }}
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache
         with:
           path: ${{ steps.npm-cache.outputs.dir }}
@@ -58,7 +58,7 @@ jobs:
           npm run test:after-commit
 
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: unittests
           env_vars: OS,NODE
