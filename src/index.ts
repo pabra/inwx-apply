@@ -112,7 +112,7 @@ const getRegisteredDomains = async (
         domain: o.domain,
         status: o.status,
         idna: o['domain-ace'],
-      } as RegisteredDomain),
+      }) as RegisteredDomain,
   );
 };
 

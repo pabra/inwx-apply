@@ -88,10 +88,11 @@ type EntriesByType = Partial<Record<ResourceRecordType, Entry[]>>;
 type UpdateEntry = { old: InwxRecord; new: Entry };
 type AddEntry = Entry & { domain: string };
 
+export { config };
 export type {
   AddEntry,
-  Credentials,
   Config,
+  Credentials,
   EntriesByType,
   Entry,
   InwxRecord,
@@ -102,4 +103,3 @@ export type {
   ResourceRecordType,
   UpdateEntry,
 };
-export { config };
