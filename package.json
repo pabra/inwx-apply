@@ -9,9 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "clean:coverage": "rimraf coverage/*",
-    "clean:build": "rimraf dist/*",
-    "clean:build:cjs": "rimraf dist/cjs/*",
+    "clean:coverage": "rimraf --glob coverage/*",
+    "clean:build": "rimraf --glob dist/*",
+    "clean:build:cjs": "rimraf --glob dist/cjs/*",
     "format": "prettier --write \"{src,__tests__}/**/*.{js,ts,jsx,tsx,json,html,css,scss,yml,yaml}\"",
     "format:check": "prettier --check \"{src,__tests__}/**/*.{js,ts,jsx,tsx,json,html,css,scss,yml,yaml}\"",
     "lint": "eslint \"{src,__tests__}/**/*.{js,ts,jsx,tsx}\"",
