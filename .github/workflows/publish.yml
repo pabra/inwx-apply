@@ -60,7 +60,9 @@ jobs:
       - name: get package.json
         id: package_json
         run: |
-          PACKAGE_JSON="$( cat package.json )"
+          PACKAGE_JSON="$(cat package.json)"
+          echo "$(ls -lahF)"
+          echo "${PACKAGE_JSON}"
           echo "JSON=${PACKAGE_JSON}" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
