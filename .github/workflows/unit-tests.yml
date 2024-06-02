@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        node: [14, 16, 18]
+        node: [16, 18, 20, 21]
 
     name: ${{ matrix.os }} Node ${{ matrix.node }} cache
 
@@ -25,24 +25,24 @@ jobs:
       NODE: ${{ matrix.node }}
 
     steps:
-      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 20 }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 20 }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - if: ${{ matrix.os != 'windows-latest' && ( matrix.os == 'ubuntu-latest' || matrix.node == 16 ) }}
+      - if: ${{ matrix.os != 'windows-latest' && ( matrix.os == 'ubuntu-latest' || matrix.node == 20 ) }}
         name: Get npm cache directory
         id: npm-cache
         run: |
           echo "::set-output name=dir::$(npm config get cache)"
 
       # getting and storing cache takes about 1:20 min each on windows
-      - if: ${{ matrix.os != 'windows-latest' && ( matrix.os == 'ubuntu-latest' || matrix.node == 16 ) }}
+      - if: ${{ matrix.os != 'windows-latest' && ( matrix.os == 'ubuntu-latest' || matrix.node == 20 ) }}
         uses: actions/cache@v4
         id: cache
         with:
@@ -52,12 +52,12 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node }}-
             ${{ runner.os }}-node-
 
-      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 20 }}
         run: |
           npm ci
           npm run test:after-commit
 
-      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 16 }}
+      - if: ${{ matrix.os == 'ubuntu-latest' || matrix.node == 20 }}
         uses: codecov/codecov-action@v4
         with:
           flags: unittests
