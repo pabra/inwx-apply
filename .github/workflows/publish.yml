@@ -58,7 +58,8 @@ jobs:
       - name: get package.json
         id: package_json
         run: |
-          echo "JSON=$( cat package.json )" >> $GITHUB_OUTPUT
+          PACKAGE_JSON="$( cat package.json )"
+          echo "JSON=${PACKAGE_JSON}" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
