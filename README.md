@@ -3,8 +3,8 @@
 [![npm version](https://img.shields.io/npm/v/inwx-apply?label=version&logo=npm)](https://www.npmjs.com/package/inwx-apply)
 [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/pabra/inwx-apply/latest?logo=docker)](https://hub.docker.com/r/pabra/inwx-apply)
 [![Codecov](https://img.shields.io/codecov/c/github/pabra/inwx-apply/master?logo=codecov)](https://codecov.io/gh/pabra/inwx-apply)
-[![unit-tests](https://github.com/pabra/inwx-apply/workflows/unit-tests/badge.svg?branch=master)](https://github.com/pabra/inwx-apply/actions?query=branch%3Amaster+workflow%3Aunit-tests)
-[![publish](https://github.com/pabra/inwx-apply/workflows/publish/badge.svg)](https://github.com/pabra/inwx-apply/actions?query=workflow%3Apublish)
+[![unit-tests](https://github.com/pabra/inwx-apply/actions/workflows/unit-tests.yml/badge.svg?branch=master)](https://github.com/pabra/inwx-apply/actions?query=branch%3Amaster+workflow%3Aunit-tests)
+[![publish](https://github.com/pabra/inwx-apply/actions/workflows/publish.yml/badge.svg)](https://github.com/pabra/inwx-apply/actions?query=workflow%3Apublish)
 
 Ensure DNS resource record entries from a JSON (exporting) file are applied
 through INWX API.
