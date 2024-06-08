@@ -64,8 +64,8 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+        # with:
+        #   platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -87,10 +87,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          # platforms: linux/amd64,linux/arm64,linux/arm/v7
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # cache-from: type=registry,ref=pabra/inwx-apply:buildcache
-          # cache-to: type=registry,ref=pabra/inwx-apply:buildcache,mode=max
+          cache-from: type=registry,ref=pabra/inwx-apply:buildcache
+          cache-to: type=registry,ref=pabra/inwx-apply:buildcache,mode=max
