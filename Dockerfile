@@ -1,7 +1,10 @@
 # use node:lts-alpine
+# build hangs for arm/v7 platform on alpine image
+# https://github.com/nodejs/docker-node/issues/2077
+# let's use slim for now
 ARG BASE_IMAGE=node:20.14.0-alpine
 
-FROM ${BASE_IMAGE} AS builder
+FROM --platform=$BUILDPLATFORM ${BASE_IMAGE} AS builder
 
 WORKDIR /app
 
@@ -24,7 +27,7 @@ COPY src src/
 RUN npm run test:before-publish
 
 
-FROM ${BASE_IMAGE}
+FROM --platform=$BUILDPLATFORM ${BASE_IMAGE}
 
 WORKDIR /app
 
