@@ -4,45 +4,43 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - master
 
 jobs:
-  # publish-npm:
-  #   runs-on: ubuntu-latest
-  #
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
-  #         registry-url: https://registry.npmjs.org/
-  #
-  #     - name: Get npm cache directory
-  #       id: npm-cache
-  #       run: |
-  #         echo "CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
-  #
-  #     - uses: actions/cache@v4
-  #       id: cache
-  #       with:
-  #         path: ${{ steps.npm-cache.outputs.CACHE_DIR }}
-  #         key: ${{ runner.os }}-node-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-node-${{ matrix.node }}-
-  #           ${{ runner.os }}-node-
-  #
-  #     - name: publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  #       run: |
-  #         set -e
-  #         npm ci
-  #         npm run test:before-publish
-  #         npm publish
+  publish-npm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      - name: Get npm cache directory
+        id: npm-cache
+        run: |
+          echo "CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: ${{ steps.npm-cache.outputs.CACHE_DIR }}
+          key: ${{ runner.os }}-node-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node }}-
+            ${{ runner.os }}-node-
+
+      - name: publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          set -e
+          npm ci
+          npm run test:before-publish
+          npm publish
 
   publish-docker:
     runs-on: ubuntu-latest
